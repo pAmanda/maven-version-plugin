@@ -5,7 +5,7 @@
     <f:entry title="${it.name}" description="${it.formattedDescription}">
     	<div name="parameter" description="${it.formattedDescription}">
     		<input type="hidden" name="name" value="${it.name}" />
-    		<f:textbox name="value" value="${it.version}" />
+    		<f:textbox name="value" value="${it.version}" default="${it.defaultValue}"/>
     	</div>
     </f:entry>
 
