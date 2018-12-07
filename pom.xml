@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -16,33 +16,30 @@
   <name>TODO Plugin</name>
   <description>TODO</description>
 
+
   <properties>
     <jenkins.version>2.60.1</jenkins.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.level>8</java.level>
   </properties>
 
-  <licenses>
-    <license>
-      <name>MIT License</name>
-      <url>http://opensource.org/licenses/MIT</url>
-    </license>
-  </licenses>
-
   <dependencies>
-    <!-- https://mvnrepository.com/artifact/org.jenkins-ci.main/maven-plugin -->
     <dependency>
       <groupId>org.jenkins-ci.main</groupId>
       <artifactId>maven-plugin</artifactId>
-      <version>2.17</version>
+      <version>3.1.2</version>
+      <scope>compile</scope>
     </dependency>
-
   </dependencies>
 
   <repositories>
     <repository>
       <id>repo.jenkins-ci.org</id>
       <url>http://repo.jenkins-ci.org/public/</url>
+    </repository>
+    <repository>
+      <id>maven-restlet</id>
+      <url>http://maven.restlet.org/</url>
     </repository>
   </repositories>
 
@@ -52,4 +49,5 @@
       <url>http://repo.jenkins-ci.org/public/</url>
     </pluginRepository>
   </pluginRepositories>
+
 </project>

@@ -1,16 +1,23 @@
 package org.jenkins.maven.version.plugin;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import hudson.Extension;
+import hudson.maven.MavenModuleSetBuild;
+import hudson.model.AbstractProject;
 import hudson.model.ParameterDefinition;
 import hudson.model.ParameterValue;
 import hudson.util.FormValidation;
+import hudson.util.RunList;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.jenkins.maven.version.plugin.maven.ReleaseVersion;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -42,25 +49,42 @@ public class MavenVersionParameterDefinition extends ParameterDefinition {
             }
         }
 
+        Jenkins jenkins = Jenkins.getInstance();
+        List<AbstractProject> abstractProject = jenkins.getItems(AbstractProject.class);
+
         System.out.println("STR: " + strValue.toString());
+      for (AbstractProject project : abstractProject) {
+        System.out.println("FOr: " + project.getSomeWorkspace());
+      }
 
         return new MavenVersionParameterValue(getName(), strValue.toString());
     }
+
+//    protected File getProjectWorkDir() {
+//        final RunList<MavenModuleSetBuild> builds = project.getBuilds();
+//        // This code assumes that the builds work dir stays the same during builds.
+//        final MavenModuleSetBuild build = builds.getLastBuild();
+//        // Convert the FilePath into a File object that we can actually use.
+//        try {
+//          return new File(build.getWorkspace().toURI().getPath());
+//        } catch (IOException e) {
+//          e.printStackTrace();
+//        } catch (InterruptedException e) {
+//          e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     @Override
     public ParameterValue createValue(StaplerRequest staplerRequest) {
         System.out.println("Create value witch 1 argument");
         String value[] = staplerRequest.getParameterValues(getName());
-      return new MavenVersionParameterValue(getName(), value[0]);
+        return new MavenVersionParameterValue(getName(), value[0]);
     }
 
     @Override
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl) super.getDescriptor();
-    }
-
-    public String getRootUrl() {
-        return Jenkins.getInstance().getRootUrl();
     }
 
     @Extension
