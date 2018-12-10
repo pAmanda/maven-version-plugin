@@ -12,7 +12,6 @@ import hudson.Extension;
 import hudson.model.*;
 import hudson.util.FormValidation;
 import jenkins.model.Jenkins;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -23,13 +22,10 @@ import org.kohsuke.stapler.StaplerRequest;
 
 public class MavenVersionParameterDefinition extends ParameterDefinition {
 
-  public static final String EMPTY_JOB_NAME = "EMPTY_JOB_NAME";
-
   public static final Logger logger = Logger.getLogger(MavenVersionParameterDefinition.class.getName());
-
+  public static final String EMPTY_JOB_NAME = "EMPTY_JOB_NAME";
+  public static final String SNAPSHOT = "-SNAPSHOT";
   private final UUID uuid;
-
-  private String defaultValue = "0";
 
   @DataBoundConstructor
   public MavenVersionParameterDefinition(String name, String description) {
@@ -39,35 +35,18 @@ public class MavenVersionParameterDefinition extends ParameterDefinition {
 
   @Override
   public ParameterValue createValue(StaplerRequest staplerRequest, JSONObject jsonObject) {
-    System.out.println("Name: " + getName() + ", Description: " + getDescription());
-    Object value = jsonObject.get("value");
-    StringBuilder strValue = new StringBuilder();
-    if (value instanceof String) {
-      strValue.append(value);
-    } else if (value instanceof JSONArray) {
-      JSONArray jsonValues = (JSONArray) value;
-      for (int i = 0; i < jsonValues.size(); i++) {
-        strValue.append(jsonValues.getString(i));
-        if (i < jsonValues.size() - 1) {
-          strValue.append(",");
-        }
-      }
-    }
-    System.out.println("Path: " + getCustomeJobName());
-    System.out.println("Version: " + getPomVersion());
+    String name = getName();
+    String parameters = "VERSION: " + staplerRequest.getParameter(name + "_version") + "; NEXT_VERSION: " + staplerRequest.getParameter(name + "_nextVersion");
+    MavenVersionParameterValue mavenVersionParameterValue = new MavenVersionParameterValue(name, parameters);
+    return mavenVersionParameterValue;
 
-    return new MavenVersionParameterValue(getName(), strValue.toString());
   }
 
   public String getPomVersion(){
-    System.out.println("Lendo o pom.");
-    final File rootPomFile = new File(getJobWorspace() + "/pom.xml");
-    if(rootPomFile.exists()) {
-      System.out.println("Pom existe");
-
+    File file = new File(getJobWorspace(), "pom.xml");
+    if(file.exists()) {
       try {
-        final Model mavenModels = parseMavenModel(rootPomFile);
-        System.out.println("Pegando a versão. : " + rootPomFile.getAbsolutePath());
+        final Model mavenModels = parseMavenModel(file);
         return mavenModels.getVersion();
       } catch (XmlPullParserException e) {
         e.printStackTrace();
@@ -75,15 +54,13 @@ public class MavenVersionParameterDefinition extends ParameterDefinition {
         e.printStackTrace();
       }
     }
-
     return null;
-
   }
 
-  public Model parseMavenModel(File rootPomFile) throws XmlPullParserException, IOException {
+  public Model parseMavenModel(File file) throws XmlPullParserException, IOException {
     MavenXpp3Reader reader = new MavenXpp3Reader();
-    Model model = reader.read(new FileReader(rootPomFile));
-    return model;
+    FileReader fileReader = new FileReader(file);
+    return reader.read(fileReader);
   }
 
   public int compareTo(MavenVersionParameterDefinition pd) {
@@ -91,7 +68,9 @@ public class MavenVersionParameterDefinition extends ParameterDefinition {
   }
 
   public String getJobWorspace(){
-    return Jenkins.getInstance().getItem(getCustomeJobName()).getRootDir().toString();
+    Jenkins jenkins = Jenkins.getInstance();
+    TopLevelItem topLevelItem = jenkins.getItem(getCustomeJobName());
+    return jenkins.getWorkspaceFor(topLevelItem).toString();
   }
 
   public String getCustomeJobName() {
@@ -122,21 +101,52 @@ public class MavenVersionParameterDefinition extends ParameterDefinition {
         }
       }
     }
-
     return context;
   }
 
-  public String getDefaultValue() {
-    return defaultValue;
+  public String getMavenVersion() {
+    String version = getPomVersion();
+    if(validateVersion(version)){
+      return removeSnapshot(version);
+    }
+    return "";
   }
 
-  public void setDefaultValue(String defaultValue) {
-    this.defaultValue = defaultValue;
+  public String getMavenNextVersion() {
+    String version = getPomVersion();
+    if(validateVersion(version)){
+      String[] pointsVersions = version.split(Pattern.quote("."));
+      Integer pointsQtd = pointsVersions.length;
+      String minorVersion = removeSnapshot(pointsVersions[pointsQtd - 1]);
+
+      Integer minorVersionInteger = new Integer(minorVersion) + 1;
+      pointsVersions[pointsQtd - 1] = minorVersionInteger.toString();
+      StringBuilder nextVersion = new StringBuilder();
+
+      for (int i = 0; i < pointsQtd; i ++) {
+        if(i == pointsQtd - 1) {
+          nextVersion.append(pointsVersions[i] + SNAPSHOT);
+        } else {
+          nextVersion.append(pointsVersions[i] + ".");
+        }
+      }
+      return nextVersion.toString();
+    }
+
+    return "";
+  }
+
+  public String removeSnapshot(String version) {
+    return version.toUpperCase().replace(SNAPSHOT, "").trim();
+  }
+
+  public boolean validateVersion(String version) {
+    return (version != null && !version.isEmpty()) ? true : false;
   }
 
   @Override
   public ParameterValue createValue(StaplerRequest staplerRequest) {
-    System.out.println("Create value witch 1 argument");
+    System.out.println("Create value with 1 argument");
     String value[] = staplerRequest.getParameterValues(getName());
     return new MavenVersionParameterValue(getName(), value[0]);
   }
