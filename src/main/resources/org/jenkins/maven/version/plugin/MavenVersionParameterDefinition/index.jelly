@@ -2,8 +2,18 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
          xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
+    <st:adjunct includes="org.jenkins.maven.version.plugin.gitParameter"/>
+
     <div name="parameter" description="${it.description}">
         <input type="hidden" name="name" value="${it.name}"/>
+
+
+        <f:entry name="goalType" title="Choose Goal Type" field="typeDeploy">
+            <select name="typeDeploy" id="typeDeploy">
+                <option value="typeDeploy">Staging</option>
+                <option value="findBugsGoal">Production</option>
+            </select>
+        </f:entry>
 
         <f:entry title="VERSION">
             <f:textbox name="${it.name}_version" default="${it.mavenVersion}"/>
@@ -11,6 +21,19 @@
         <f:entry title="NEXT_VERSION">
             <f:textbox name="${it.name}_nextVersion" default="${it.mavenNextVersion}"/>
         </f:entry>
+
+        <f:entry title="BRANCH_NAME">
+            <select name="value" class="gitParameterSelect" size="5" style="min-width: 200px" id="gitParameterSelect" />
+        </f:entry>
+
+        <f:entry title="TAG_NAME">
+            <select name="value" class="gitParameterSelect" size="5" style="min-width: 200px" id="gitParameterSelect" />
+        </f:entry>
+         <script type="text/javascript">
+            createBranchValues("${it.examples}");
+            showHide();
+         </script>
+
     </div>
 
 </j:jelly>
