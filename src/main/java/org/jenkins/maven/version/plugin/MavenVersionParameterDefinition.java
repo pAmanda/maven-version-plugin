@@ -30,6 +30,7 @@ import org.jenkinsci.plugins.gitclient.GitClient;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.bind.JavaScriptMethod;
 
 public class MavenVersionParameterDefinition extends ParameterDefinition {
 
@@ -38,7 +39,16 @@ public class MavenVersionParameterDefinition extends ParameterDefinition {
   public static final String SNAPSHOT = "-SNAPSHOT";
   public static final String REFS_TAGS_PATTERN = ".*refs/tags/";
   private final UUID uuid;
-  public String typeDeploy;
+  public String typeDeploy = "true";
+  public boolean test = true;
+
+  public boolean getTest() {
+    return test;
+  }
+
+  public void setTest(boolean test) {
+    this.test = test;
+  }
 
   public String getTypeDeploy() {
     return typeDeploy;
@@ -70,8 +80,6 @@ public class MavenVersionParameterDefinition extends ParameterDefinition {
   public void testScm() {
     Job job = this.getParentJob();
     JobWrapper jobWrapper = JobWrapperFactory.createJobWrapper(job);
-
-    ParametersDefinitionProperty prop = jobWrapper.getProperty(ParametersDefinitionProperty.class);
 
     List<SCM> scms = jobWrapper.getScms();
 
@@ -140,6 +148,10 @@ public class MavenVersionParameterDefinition extends ParameterDefinition {
       e.printStackTrace();
     }
     return tagSet;
+  }
+
+  private List<String> getBranch(){
+    return null;
   }
 
   private Set<String> getBranch(GitClient gitClient, String gitUrl, String remoteName) throws Exception {
