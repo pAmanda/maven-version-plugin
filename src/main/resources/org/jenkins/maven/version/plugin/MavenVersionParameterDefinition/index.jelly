@@ -9,7 +9,7 @@
 
 
         <f:entry name="goalType" title="Choose Goal Type" field="typeDeploy">
-            <select name="typeDeploy" id="typeDeploy">
+            <select onchange="showHide()" name="typeDeploy" id="typeDeploy">
                 <option value="typeDeploy">Staging</option>
                 <option value="findBugsGoal">Production</option>
             </select>
@@ -31,7 +31,6 @@
         </f:entry>
          <script type="text/javascript">
             createBranchValues("${it.examples}");
-            showHide();
          </script>
 
     </div>
