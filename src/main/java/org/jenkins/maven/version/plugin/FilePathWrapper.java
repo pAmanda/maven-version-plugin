@@ -13,10 +13,6 @@ public class FilePathWrapper {
     this.filePath = filePath;
   }
 
-  public void setThatTemporary() {
-    isTemporary = true;
-  }
-
   public FilePath getFilePath() {
     return filePath;
   }

@@ -1,14 +1,9 @@
 package org.jenkins.maven.version.plugin.job;
 
 import hudson.EnvVars;
-import hudson.FilePath;
 import hudson.model.Job;
 import hudson.model.TaskListener;
-import hudson.model.TopLevelItem;
 import hudson.scm.SCM;
-import jenkins.model.Jenkins;
-
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;

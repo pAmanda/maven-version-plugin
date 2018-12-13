@@ -3,9 +3,7 @@ package org.jenkins.maven.version.plugin.job;
 import hudson.EnvVars;
 import hudson.model.Job;
 import hudson.model.Node;
-import hudson.model.ParametersDefinitionProperty;
 import hudson.model.TaskListener;
-
 import java.io.IOException;
 
 public abstract class AbstractJobWrapper implements JobWrapper {
@@ -19,11 +17,6 @@ public abstract class AbstractJobWrapper implements JobWrapper {
   @Override
   public Job getJob() {
     return job;
-  }
-
-  @Override
-  public ParametersDefinitionProperty getProperty(Class<ParametersDefinitionProperty> propertyClass) {
-    return (ParametersDefinitionProperty) job.getProperty(propertyClass);
   }
 
   @Override

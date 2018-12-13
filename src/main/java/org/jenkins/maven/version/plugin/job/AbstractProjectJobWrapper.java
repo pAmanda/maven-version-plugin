@@ -6,7 +6,6 @@ import hudson.model.AbstractProject;
 import hudson.model.Job;
 import hudson.model.TaskListener;
 import hudson.scm.SCM;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;

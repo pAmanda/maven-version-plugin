@@ -1,9 +1,16 @@
 function createBranchValues(arr) {
+    createValues(arr, "branchSelect")
+}
 
+function createTagValues(arr) {
+    createValues(arr, "tagSelect")
+}
+
+function createValues(arr, selectId) {
     if((typeof arr == 'string' && arr.trim().length > 0) || typeof arr != 'undefined' || arr != null) {
         var values = arr.trim().replace("[", "").replace("]", "").split(",");
 
-        var select = document.getElementById("branchSelect")
+        var select = document.getElementById(selectId)
         for(var i = 0; i < values.length; i++)
         {
             var option = document.createElement("OPTION"),
@@ -16,7 +23,7 @@ function createBranchValues(arr) {
 }
 
 function showHide() {
-    var e = document.getElementById("typeDeploy");
+    var e = document.getElementById("environment");
     var itemSelecionado = e.options[e.selectedIndex].text;
     console.log(itemSelecionado)
     if(itemSelecionado == "Staging") {

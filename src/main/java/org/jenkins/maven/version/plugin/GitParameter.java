@@ -1,31 +1,35 @@
-package org.jenkins.maven.version.plugin.job;
+package org.jenkins.maven.version.plugin;
 
 import hudson.EnvVars;
 import hudson.Util;
 import hudson.model.*;
+import hudson.plugins.git.GitException;
 import hudson.plugins.git.GitSCM;
 import hudson.scm.SCM;
 import jenkins.model.Jenkins;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
-import org.jenkins.maven.version.plugin.FilePathWrapper;
+import org.jenkins.maven.version.plugin.job.JobWrapper;
+import org.jenkins.maven.version.plugin.job.JobWrapperFactory;
 import org.jenkinsci.plugins.gitclient.GitClient;
-
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.Serializable;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class GitParameter {
+public class GitParameter implements Serializable {
 
   private Job job;
   private Set<String> tag = new HashSet<String>();
   private Set<String> branch = new HashSet<>();
   private static GitParameter gitParameter = null;
+  private static final long serialVersionUID = 1L;
 
   private GitParameter(Job job) {
     this.job = job;
+    initScm();
   }
 
   public static GitParameter getInstance(Job job) {
@@ -39,9 +43,10 @@ public class GitParameter {
     JobWrapper jobWrapper = JobWrapperFactory.createJobWrapper(getJob());
     List<SCM> scms = jobWrapper.getScms();
     List<GitSCM> gitSCMs = getFirstGitScm(scms);
-    if(gitSCMs != null || !gitSCMs.isEmpty()) {
-      generateContents(jobWrapper, gitSCMs);
+    if(gitSCMs == null || gitSCMs.isEmpty()) {
+      return;
     }
+    generateContents(jobWrapper, gitSCMs);
   }
 
   private List<GitSCM> getFirstGitScm(List<SCM> scms){
@@ -61,8 +66,8 @@ public class GitParameter {
           for (URIish urIish : remoteConfig.getURIs()) {
             String gitUrl = Util.replaceMacro(urIish.toPrivateASCIIString(), environment);
             try {
-              Set<String> branchs = setBranch(gitClient, gitUrl, remoteConfig.getName());
-              Set<String> tags = setTag(gitClient, gitUrl);
+              setBranch(gitClient, gitUrl, remoteConfig.getName());
+              setTag(gitClient, gitUrl);
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -125,6 +130,20 @@ public class GitParameter {
     return gitClient;
   }
 
+  private Pattern compileBranchFilterPattern() {
+    Pattern branchFilterPattern;
+    try {
+      branchFilterPattern = Pattern.compile(ConstsUtil.REFS_BRANCHS_PATTERNS);
+    } catch (Exception e) {
+      branchFilterPattern = Pattern.compile(".*");
+    }
+    return branchFilterPattern;
+  }
+
+  private String strip(String name, String remote) {
+    return remote + "/" + name.substring(name.indexOf('/', 5) + 1);
+  }
+
   public Job getJob() {
     return job;
   }
@@ -137,15 +156,35 @@ public class GitParameter {
     return tag;
   }
 
-  public void setTag(Set<String> tag) {
-    this.tag = tag;
-  }
-
   public Set<String> getBranch() {
     return branch;
   }
 
-  public void setBranch(Set<String> branch) {
-    this.branch = branch;
+  public void setTag(GitClient gitClient, String gitUrl) throws InterruptedException, GitException {
+    Map<String, ObjectId> tags = gitClient.getRemoteReferences(gitUrl, "*", false, true);
+    for (String tagName : tags.keySet()) {
+      this.tag.add(removeBrackets(tagName.replaceFirst(ConstsUtil.REFS_TAGS_PATTERN, "")));
+    }
+  }
+
+  public void setBranch(GitClient gitClient, String gitUrl, String remoteName) throws Exception {
+    Pattern branchFilterPattern = compileBranchFilterPattern();
+    Map<String, ObjectId> branches = gitClient.getRemoteReferences(gitUrl, null, true, false);
+    Iterator<String> remoteBranchesName = branches.keySet().iterator();
+    while (remoteBranchesName.hasNext()) {
+      String branchName = strip(remoteBranchesName.next(), remoteName);
+      Matcher matcher = branchFilterPattern.matcher(branchName);
+      if (matcher.matches()) {
+        if (matcher.groupCount() == 1) {
+          this.branch.add(removeBrackets(matcher.group(1)));
+        } else {
+          this.branch.add(removeBrackets(branchName));
+        }
+      }
+    }
+  }
+
+  public String removeBrackets(String name){
+    return name.replaceAll("\\[", "").replaceAll("\\]","");
   }
 }

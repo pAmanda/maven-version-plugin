@@ -2,10 +2,10 @@ package org.jenkins.maven.version.plugin.job;
 
 import hudson.model.AbstractProject;
 import hudson.model.Job;
+import org.jenkins.maven.version.plugin.ConstsUtil;
 
 public class JobWrapperFactory {
 
-  private static final String WORKFLOW_JOB_CLASS_NAME = "org.jenkinsci.plugins.workflow.job.WorkflowJob";
 
   public static JobWrapper createJobWrapper(Job job) {
     if (job instanceof AbstractProject) {
@@ -17,7 +17,7 @@ public class JobWrapperFactory {
   }
 
   private static boolean isWorkflowJob(Job job) {
-    return job != null && WORKFLOW_JOB_CLASS_NAME.equals(job.getClass().getName());
+    return job != null && ConstsUtil.WORKFLOW_JOB_CLASS_NAME.equals(job.getClass().getName());
   }
 
 }

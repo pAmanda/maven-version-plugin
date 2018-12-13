@@ -4,13 +4,13 @@
          xmlns:g2="null">
 
     <st:adjunct includes="org.jenkins.maven.version.plugin.gitParameter"/>
-    <div name="parameter" description="${it.description}">
+    <table name="parameter" description="${it.description}">
 
         <input type="hidden" name="name" value="${it.name}"/>
 
         <table>
-            <f:entry name="typeDeploy" title="DEPLOY              ">
-                <select onchange="showHide()" name="typeDeploy" id="typeDeploy">
+            <f:entry name="environment" title="Environment   ">
+                <select onchange="showHide()" name="environment" id="environment">
                     <option value="default"/>
                     <option value="staging">Staging</option>
                     <option value="production">Production</option>
@@ -19,28 +19,29 @@
         </table>
 
         <table style="display: block;" id="version">
-            <f:entry title="VERSION">
+            <f:entry title="Version">
                 <f:textbox name="${it.name}_version" default="${it.mavenVersion}"/>
             </f:entry>
-            <f:entry title="NEXT_VERSION">
+            <f:entry title="Next Version   ">
                 <f:textbox name="${it.name}_nextVersion" default="${it.mavenNextVersion}"/>
             </f:entry>
         </table>
 
         <table style="display: block;" id="branch">
-            <f:entry title="BRANCH_NAME ">
-                 <select name="${it.name}_branch" class="gitParameterSelect" size="5" style="min-width: 200px;" id="branchSelect"/>
+            <f:entry title="Branch Name  ">
+                 <select name="${it.name}_branch" size="5" style="min-width: 200px;" id="branchSelect"/>
             </f:entry>
         </table>
 
         <table style="display: block;" id="tag">
-            <f:entry title="TAG_NAME         ">
-                <select name="${it.name}_tag" class="gitParameterSelect" size="5" style="min-width: 200px" id="tagSelect"/>
+            <f:entry title="Tag Name       ">
+                <select name="${it.name}_tag" size="5" style="min-width: 200px" id="tagSelect"/>
             </f:entry>
         </table>
 
          <script type="text/javascript">
-            createBranchValues("${it.examples}");
+            createBranchValues("${it.branch}");
+            createTagValues("${it.tag}");
          </script>
-    </div>
+    </table>
 </j:jelly>
