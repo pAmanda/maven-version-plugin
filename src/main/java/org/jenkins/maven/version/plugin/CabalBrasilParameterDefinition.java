@@ -22,16 +22,16 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public class MavenVersionParameterDefinition extends ParameterDefinition {
+public class CabalBrasilParameterDefinition extends ParameterDefinition {
 
-  public static final Logger logger = Logger.getLogger(MavenVersionParameterDefinition.class.getName());
+  public static final Logger logger = Logger.getLogger(CabalBrasilParameterDefinition.class.getName());
   private static final long serialVersionUID = 1L;
   private GitParameter gitParameter;
   private String pomVersion = "";
   private final UUID uuid;
 
   @DataBoundConstructor
-  public MavenVersionParameterDefinition(String name, String description) {
+  public CabalBrasilParameterDefinition(String name, String description) {
     super(name, description);
     this.uuid = UUID.randomUUID();
   }
@@ -39,20 +39,25 @@ public class MavenVersionParameterDefinition extends ParameterDefinition {
   @Override
   public ParameterValue createValue(StaplerRequest staplerRequest, JSONObject jsonObject) {
     String name = getName();
-    String parameters = "VERSION: " + staplerRequest.getParameter(name + "_version") +
+    String parameters = "ENVIRONMENT: " + staplerRequest.getParameter(name + "_environment") +
+            "; VERSION: " + staplerRequest.getParameter(name + "_version") +
             "; NEXT_VERSION: " + staplerRequest.getParameter(name + "_nextVersion") +
             "; TAG_NAME: " + staplerRequest.getParameter(name + "_tag") +
             "; BRANCH_NAME: " + staplerRequest.getParameter(name + "_branch");
     System.out.println("Parâmetros: " + parameters);
-    MavenVersionParameterValue mavenVersionParameterValue = new MavenVersionParameterValue(name, parameters);
-    return mavenVersionParameterValue;
+    CabalBrasilParameterValue cabalBrasilParameterValue = new CabalBrasilParameterValue(name, parameters);
+    return cabalBrasilParameterValue;
   }
 
   public String getPomVersion(){
+      System.out.println("Pegando a versão do pom.");
       if(StringUtils.isBlank(this.pomVersion)) {
+        System.out.println("Lendo o pom.xml");
         File file = new File(getJobWorkspace(), "pom.xml");
         if (file.exists()) {
+          System.out.println("O pom.xml existe.");
           try {
+            System.out.println("Parse pom.xml");
             final Model mavenModels = parseMavenModel(file);
             this.pomVersion = mavenModels.getVersion();
           } catch (XmlPullParserException e) {
@@ -71,7 +76,7 @@ public class MavenVersionParameterDefinition extends ParameterDefinition {
     return mavenXpp3Reader.read(fileReader);
   }
 
-  public int compareUUID(MavenVersionParameterDefinition pd) {
+  public int compareUUID(CabalBrasilParameterDefinition pd) {
     return pd.uuid.equals(uuid) ? 0 : -1;
   }
 
@@ -101,7 +106,7 @@ public class MavenVersionParameterDefinition extends ParameterDefinition {
 
         if (parameterDefinitions != null) {
           for (ParameterDefinition pd : parameterDefinitions) {
-            if (pd instanceof MavenVersionParameterDefinition && ((MavenVersionParameterDefinition) pd).compareUUID(this) == 0) {
+            if (pd instanceof CabalBrasilParameterDefinition && ((CabalBrasilParameterDefinition) pd).compareUUID(this) == 0) {
               context = job;
               break;
             }
@@ -162,7 +167,7 @@ public class MavenVersionParameterDefinition extends ParameterDefinition {
   @Override
   public ParameterValue createValue(StaplerRequest staplerRequest) {
     String value[] = staplerRequest.getParameterValues(getName());
-    return new MavenVersionParameterValue(getName(), value[0]);
+    return new CabalBrasilParameterValue(getName(), value[0]);
   }
 
   @Override

@@ -32,7 +32,7 @@ public class AbstractProjectJobWrapper extends AbstractJobWrapper {
         return someBuildWithWorkspace.getEnvironment(TaskListener.NULL);
       }
     } catch (Exception e) {
-      LOGGER.log(Level.SEVERE, "", e);
+      LOGGER.log(Level.SEVERE, "Erro ao capturar variáveis de ambiente da build.", e);
     }
     return null;
   }

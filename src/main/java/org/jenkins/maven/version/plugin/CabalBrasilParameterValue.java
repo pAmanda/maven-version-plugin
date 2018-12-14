@@ -3,10 +3,10 @@ package org.jenkins.maven.version.plugin;
 import hudson.model.StringParameterValue;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-public class MavenVersionParameterValue extends StringParameterValue {
+public class CabalBrasilParameterValue extends StringParameterValue {
 
     @DataBoundConstructor
-    public MavenVersionParameterValue(String name, String value) {
+    public CabalBrasilParameterValue(String name, String value) {
         super(name, value);
     }
 

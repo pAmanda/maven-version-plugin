@@ -9,8 +9,8 @@
         <input type="hidden" name="name" value="${it.name}"/>
 
         <table>
-            <f:entry name="environment" title="Environment   ">
-                <select onchange="showHide()" name="environment" id="environment">
+            <f:entry title="Environment   ">
+                <select onchange="showHide()" name="${it.name}_environment" id="environment">
                     <option value="default"/>
                     <option value="staging">Staging</option>
                     <option value="production">Production</option>

@@ -16,6 +16,8 @@ import org.jenkinsci.plugins.gitclient.GitClient;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +27,7 @@ public class GitParameter implements Serializable {
   private Set<String> tag = new HashSet<String>();
   private Set<String> branch = new HashSet<>();
   private static final long serialVersionUID = 1L;
+  private static final Logger LOGGER = Logger.getLogger(GitParameter.class.getName());
 
   private GitParameter(Job job) {
     this.job = job;
@@ -65,15 +68,15 @@ public class GitParameter implements Serializable {
               setBranch(gitClient, gitUrl, remoteConfig.getName());
               setTag(gitClient, gitUrl);
             } catch (Exception e) {
-              e.printStackTrace();
+              LOGGER.log(Level.SEVERE, "Erro ao setar os parâmetros branch e tag", e);
             }
           }
         }
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.SEVERE, "Erro ao recuperar parâmetros do Git.", e);
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.SEVERE, "Erro ao recuperar parâmetros do Git.", e);
     }
   }
 
@@ -159,7 +162,7 @@ public class GitParameter implements Serializable {
   public void setTag(GitClient gitClient, String gitUrl) throws InterruptedException, GitException {
     Map<String, ObjectId> tags = gitClient.getRemoteReferences(gitUrl, "*", false, true);
     for (String tagName : tags.keySet()) {
-      this.tag.add(removeBrackets(tagName.replaceFirst(ConstsUtil.REFS_TAGS_PATTERN, "")));
+      this.tag.add(tagName.replaceFirst(ConstsUtil.REFS_TAGS_PATTERN, ""));
     }
   }
 
@@ -172,15 +175,11 @@ public class GitParameter implements Serializable {
       Matcher matcher = branchFilterPattern.matcher(branchName);
       if (matcher.matches()) {
         if (matcher.groupCount() == 1) {
-          this.branch.add(removeBrackets(matcher.group(1)));
+          this.branch.add(matcher.group(1));
         } else {
-          this.branch.add(removeBrackets(branchName));
+          this.branch.add(branchName);
         }
       }
     }
-  }
-
-  public String removeBrackets(String name){
-    return name.replaceAll("\\[", "").replaceAll("\\]","");
   }
 }
