@@ -24,7 +24,6 @@ public class GitParameter implements Serializable {
   private Job job;
   private Set<String> tag = new HashSet<String>();
   private Set<String> branch = new HashSet<>();
-  private static GitParameter gitParameter = null;
   private static final long serialVersionUID = 1L;
 
   private GitParameter(Job job) {
@@ -33,10 +32,7 @@ public class GitParameter implements Serializable {
   }
 
   public static GitParameter getInstance(Job job) {
-    if(gitParameter == null) {
-      gitParameter = new GitParameter(job);
-    }
-    return gitParameter;
+    return new GitParameter(job);
   }
 
   public void initScm() {

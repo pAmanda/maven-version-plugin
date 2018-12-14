@@ -151,7 +151,7 @@ public class MavenVersionParameterDefinition extends ParameterDefinition {
   }
 
   public Set<String> getTag() {
-    gitParameter = GitParameter.getInstance(getParentJob());
+    //gitParameter = GitParameter.getInstance(getParentJob());
     return gitParameter.getTag();
   }
 
