@@ -1,4 +1,4 @@
-package org.jenkins.maven.version.plugin;
+package org.jenkins.cabal.plugin;
 
 import hudson.EnvVars;
 import hudson.Util;
@@ -10,8 +10,8 @@ import jenkins.model.Jenkins;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
-import org.jenkins.maven.version.plugin.job.JobWrapper;
-import org.jenkins.maven.version.plugin.job.JobWrapperFactory;
+import org.jenkins.cabal.plugin.job.JobWrapper;
+import org.jenkins.cabal.plugin.job.JobWrapperFactory;
 import org.jenkinsci.plugins.gitclient.GitClient;
 import java.io.IOException;
 import java.io.Serializable;

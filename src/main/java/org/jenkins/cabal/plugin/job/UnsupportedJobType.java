@@ -1,4 +1,4 @@
-package org.jenkins.maven.version.plugin.job;
+package org.jenkins.cabal.plugin.job;
 
 public class UnsupportedJobType extends RuntimeException {
 

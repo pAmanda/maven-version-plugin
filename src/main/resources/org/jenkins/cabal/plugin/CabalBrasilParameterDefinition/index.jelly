@@ -3,7 +3,7 @@
          xmlns:t="/lib/hudson" xmlns:f="/lib/form"
          xmlns:g2="null">
 
-    <st:adjunct includes="org.jenkins.maven.version.plugin.gitParameter"/>
+    <st:adjunct includes="org.jenkins.cabal.plugin.gitParameter"/>
     <table name="parameter" description="${it.description}">
 
         <input type="hidden" name="name" value="${it.name}"/>

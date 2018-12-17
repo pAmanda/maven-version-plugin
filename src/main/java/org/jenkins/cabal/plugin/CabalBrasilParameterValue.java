@@ -1,4 +1,4 @@
-package org.jenkins.maven.version.plugin;
+package org.jenkins.cabal.plugin;
 
 import hudson.model.StringParameterValue;
 import org.kohsuke.stapler.DataBoundConstructor;

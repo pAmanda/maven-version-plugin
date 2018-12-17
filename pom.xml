@@ -10,10 +10,10 @@
     </parent>
 
     <groupId>io.jenkins.plugins</groupId>
-    <artifactId>maven-version-plugin</artifactId>
+    <artifactId>cabal-brasil-parameter-plugin</artifactId>
     <version>1.0.0</version>
     <packaging>hpi</packaging>
-    <name>maven-version-plugin</name>
+    <name>cabal-brasil-parameter-plugin</name>
     <description>Plugin responsável por parametrizar a versão e a próxima versão de um projeto.</description>
 
     <properties>
@@ -57,8 +57,8 @@
             <artifactId>matrix-project</artifactId>
             <version>1.13</version>
         </dependency>
-
     </dependencies>
+
     <pluginRepositories>
         <pluginRepository>
             <id>repo.jenkins-ci.org</id>

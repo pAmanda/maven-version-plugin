@@ -1,8 +1,8 @@
-package org.jenkins.maven.version.plugin.job;
+package org.jenkins.cabal.plugin.job;
 
 import hudson.model.AbstractProject;
 import hudson.model.Job;
-import org.jenkins.maven.version.plugin.ConstsUtil;
+import org.jenkins.cabal.plugin.ConstsUtil;
 
 public class JobWrapperFactory {
 

@@ -1,4 +1,4 @@
-package org.jenkins.maven.version.plugin;
+package org.jenkins.cabal.plugin;
 
 import hudson.Extension;
 import hudson.model.*;
@@ -50,14 +50,10 @@ public class CabalBrasilParameterDefinition extends ParameterDefinition {
   }
 
   public String getPomVersion(){
-      System.out.println("Pegando a versão do pom.");
       if(StringUtils.isBlank(this.pomVersion)) {
-        System.out.println("Lendo o pom.xml");
         File file = new File(getJobWorkspace(), "pom.xml");
         if (file.exists()) {
-          System.out.println("O pom.xml existe.");
           try {
-            System.out.println("Parse pom.xml");
             final Model mavenModels = parseMavenModel(file);
             this.pomVersion = mavenModels.getVersion();
           } catch (XmlPullParserException e) {
