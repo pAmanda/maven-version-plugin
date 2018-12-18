@@ -1,3 +1,42 @@
-.idea
-target
-work
+# Compiled source
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases
+*.log
+*.cvs
+*.sqlite
+
+
+# OS generated files
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# Java generated stuff
+*.iml
+.springBeans
+.classpath
+.project
+.groovy/
+.settings/
+.idea/
+logs/
+target/
+/bin/
+work/

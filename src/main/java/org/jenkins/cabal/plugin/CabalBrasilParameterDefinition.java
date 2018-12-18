@@ -9,6 +9,7 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.jenkins.cabal.plugin.git.GitParameter;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -22,6 +23,11 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+/**
+ * Define o plugin, como os parâmetros e o comportamento dele e faz "data binding" com a a tela do plugin
+ * no Jenkins.
+ * @author amanda.pires
+ */
 public class CabalBrasilParameterDefinition extends ParameterDefinition {
 
   public static final Logger logger = Logger.getLogger(CabalBrasilParameterDefinition.class.getName());
@@ -44,7 +50,6 @@ public class CabalBrasilParameterDefinition extends ParameterDefinition {
             "; NEXT_VERSION: " + staplerRequest.getParameter(name + "_nextVersion") +
             "; TAG_NAME: " + staplerRequest.getParameter(name + "_tag") +
             "; BRANCH_NAME: " + staplerRequest.getParameter(name + "_branch");
-    System.out.println("Parâmetros: " + parameters);
     CabalBrasilParameterValue cabalBrasilParameterValue = new CabalBrasilParameterValue(name, parameters);
     return cabalBrasilParameterValue;
   }

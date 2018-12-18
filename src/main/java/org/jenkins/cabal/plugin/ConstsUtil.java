@@ -1,5 +1,8 @@
 package org.jenkins.cabal.plugin;
 
+/**
+ * Constantes utilitárias.
+ */
 public class ConstsUtil {
 
   public static final String REFS_TAGS_PATTERN = ".*refs/tags/";

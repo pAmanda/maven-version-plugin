@@ -1,9 +1,13 @@
-package org.jenkins.cabal.plugin;
+package org.jenkins.cabal.plugin.git;
 
 import hudson.FilePath;
 
 import java.io.IOException;
 
+/**
+ *
+ * @author amanda.pires
+ */
 public class FilePathWrapper {
 
   private final FilePath filePath;
@@ -11,10 +15,6 @@ public class FilePathWrapper {
 
   public FilePathWrapper(FilePath filePath) {
     this.filePath = filePath;
-  }
-
-  public FilePath getFilePath() {
-    return filePath;
   }
 
   public void delete() throws IOException, InterruptedException {

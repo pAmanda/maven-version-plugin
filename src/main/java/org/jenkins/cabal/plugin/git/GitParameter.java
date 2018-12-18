@@ -1,4 +1,4 @@
-package org.jenkins.cabal.plugin;
+package org.jenkins.cabal.plugin.git;
 
 import hudson.EnvVars;
 import hudson.Util;
@@ -10,6 +10,7 @@ import jenkins.model.Jenkins;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.URIish;
+import org.jenkins.cabal.plugin.ConstsUtil;
 import org.jenkins.cabal.plugin.job.JobWrapper;
 import org.jenkins.cabal.plugin.job.JobWrapperFactory;
 import org.jenkinsci.plugins.gitclient.GitClient;
@@ -21,6 +22,10 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Coleta todos os dados necessários do repositório Git, como branchs e tags.
+ * @author amanda.pires
+ */
 public class GitParameter implements Serializable {
 
   private Job job;
@@ -123,7 +128,7 @@ public class GitParameter implements Serializable {
     int nextBuildNumber = jobWrapper.getNextBuildNumber();
 
     GitClient gitClient = git.createClient(TaskListener.NULL, environment, new Run(jobWrapper.getJob()) {
-    }, workspace != null ? workspace.getFilePath() : null);
+    }, null);
 
     jobWrapper.updateNextBuildNumber(nextBuildNumber);
     return gitClient;
