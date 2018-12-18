@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Implementação para Jobs do tipo Workflow.
+ * @author amanda.pires
+ */
 public class WorkflowJobWrapper extends AbstractJobWrapper {
 
   private static final Logger LOGGER = Logger.getLogger(WorkflowJobWrapper.class.getName());
@@ -47,7 +51,6 @@ public class WorkflowJobWrapper extends AbstractJobWrapper {
     }
     return null;
   }
-
 
   private SCM getSCMFromDefinition() {
     try {

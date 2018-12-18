@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Implementação para Jobs do tipo Abstract Project.
+ * @author amanda.pires
+ */
 public class AbstractProjectJobWrapper extends AbstractJobWrapper {
 
   private static final Logger LOGGER = Logger.getLogger(AbstractProjectJobWrapper.class.getName());

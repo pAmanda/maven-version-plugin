@@ -2,6 +2,7 @@ package org.jenkins.cabal.plugin;
 
 /**
  * Constantes utilitárias.
+ * @author amanda.pires
  */
 public class ConstsUtil {
 

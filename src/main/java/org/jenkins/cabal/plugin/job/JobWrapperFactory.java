@@ -4,8 +4,11 @@ import hudson.model.AbstractProject;
 import hudson.model.Job;
 import org.jenkins.cabal.plugin.ConstsUtil;
 
+/**
+ * Fábrica de JobWrapper, do tipo AbstractProject ou Workflow.
+ * @author amanda.pires
+ */
 public class JobWrapperFactory {
-
 
   public static JobWrapper createJobWrapper(Job job) {
     if (job instanceof AbstractProject) {

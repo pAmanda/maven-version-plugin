@@ -2,7 +2,6 @@ package org.jenkins.cabal.plugin;
 
 import hudson.Extension;
 import hudson.model.*;
-import hudson.util.FormValidation;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 import org.apache.maven.model.Model;
@@ -11,7 +10,6 @@ import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jenkins.cabal.plugin.git.GitParameter;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import java.io.File;
 import java.io.FileReader;
@@ -21,7 +19,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 /**
  * Define o plugin, como os parâmetros e o comportamento dele e faz "data binding" com a a tela do plugin
@@ -55,19 +52,19 @@ public class CabalBrasilParameterDefinition extends ParameterDefinition {
   }
 
   public String getPomVersion(){
-      if(StringUtils.isBlank(this.pomVersion)) {
-        File file = new File(getJobWorkspace(), "pom.xml");
-        if (file.exists()) {
-          try {
-            final Model mavenModels = parseMavenModel(file);
-            this.pomVersion = mavenModels.getVersion();
-          } catch (XmlPullParserException e) {
-            e.printStackTrace();
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
+    if(StringUtils.isBlank(this.pomVersion)) {
+      File file = new File(getJobWorkspace(), "pom.xml");
+      if (file.exists()) {
+        try {
+          final Model mavenModels = parseMavenModel(file);
+          this.pomVersion = mavenModels.getVersion();
+        } catch (XmlPullParserException e) {
+          e.printStackTrace();
+        } catch (IOException e) {
+          e.printStackTrace();
         }
       }
+    }
     return this.pomVersion;
   }
 
@@ -82,15 +79,10 @@ public class CabalBrasilParameterDefinition extends ParameterDefinition {
   }
 
   public String getJobWorkspace(){
-    Jenkins jenkins = Jenkins.getInstance();
-    TopLevelItem topLevelItem = jenkins.getItem(getCustomJobName());
-    return jenkins.getWorkspaceFor(topLevelItem).getRemote();
-  }
-
-  public String getCustomJobName() {
     Job job = getParentJob();
-    String fullName = job != null ? job.getFullName() : ConstsUtil.EMPTY_JOB_NAME;
-    return fullName;
+    Jenkins jenkins = Jenkins.getInstance();
+    TopLevelItem topLevelItem = jenkins.getItem(job != null ? job.getFullName() : ConstsUtil.EMPTY_JOB_NAME);
+    return jenkins.getWorkspaceFor(topLevelItem).getRemote();
   }
 
   public Job getParentJob() {
@@ -182,20 +174,6 @@ public class CabalBrasilParameterDefinition extends ParameterDefinition {
     @Override
     public String getDisplayName() {
       return ConstsUtil.PLUGIN_NAME;
-    }
-
-    public FormValidation doValidate(@QueryParameter String value) {
-      return validationRegularExpression(value);
-    }
-
-    private FormValidation validationRegularExpression(final String value) {
-      try {
-        Pattern.compile(value);
-        return FormValidation.ok();
-      } catch (PatternSyntaxException e) {
-        logger.severe("Expressão regular errada: " + value);
-        return FormValidation.error(e.getMessage());
-      }
     }
   }
 }

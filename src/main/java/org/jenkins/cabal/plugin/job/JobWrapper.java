@@ -8,6 +8,10 @@ import hudson.scm.SCM;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Define métodos necessários para recuperar os parâmetros do repositório GIT.
+ * @author amanda.pires
+ */
 public interface JobWrapper {
 
   Job getJob();

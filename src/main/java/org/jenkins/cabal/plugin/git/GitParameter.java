@@ -66,7 +66,7 @@ public class GitParameter implements Serializable {
       EnvVars environment = getEnvironment(jobWrapper);
       for (GitSCM gitSCM : gitSCMS) {
         for (RemoteConfig remoteConfig: gitSCM.getRepositories()) {
-          GitClient gitClient = getGitClient(jobWrapper, null, gitSCM, environment);
+          GitClient gitClient = getGitClient(jobWrapper, gitSCM, environment);
           for (URIish urIish : remoteConfig.getURIs()) {
             String gitUrl = Util.replaceMacro(urIish.toPrivateASCIIString(), environment);
             try {
@@ -124,13 +124,11 @@ public class GitParameter implements Serializable {
     }
   }
 
-  private GitClient getGitClient(final JobWrapper jobWrapper, FilePathWrapper workspace, GitSCM git, EnvVars environment) throws IOException, InterruptedException {
-    int nextBuildNumber = jobWrapper.getNextBuildNumber();
-
+  private GitClient getGitClient(final JobWrapper jobWrapper, GitSCM git, EnvVars environment) throws IOException, InterruptedException {
     GitClient gitClient = git.createClient(TaskListener.NULL, environment, new Run(jobWrapper.getJob()) {
     }, null);
 
-    jobWrapper.updateNextBuildNumber(nextBuildNumber);
+    jobWrapper.updateNextBuildNumber(jobWrapper.getNextBuildNumber() - 1);
     return gitClient;
   }
 

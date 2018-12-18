@@ -6,6 +6,10 @@ import hudson.model.Node;
 import hudson.model.TaskListener;
 import java.io.IOException;
 
+/**
+ * Abstração de um JOB com os métodos necessários para o contexto.
+ * @author amanda.pires
+ */
 public abstract class AbstractJobWrapper implements JobWrapper {
 
   private Job job;
